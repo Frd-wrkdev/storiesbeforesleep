@@ -317,6 +317,30 @@
       }
     }
 
+    /* --- Header colour-mode switch --- */
+    var themeGroup = doc.getElementById('theme-group');
+    if (themeGroup && CBT.theme) {
+      var syncThemeGroup = function () {
+        var active = CBT.theme.mode();
+        CBT.dom.qsa('[data-theme]', themeGroup).forEach(function (b) {
+          var on = b.getAttribute('data-theme') === active;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-pressed', String(on));
+        });
+      };
+
+      CBT.dom.delegate(themeGroup, 'click', '[data-theme]', function (e, btn) {
+        var next = btn.getAttribute('data-theme');
+        if (next !== 'auto' && next !== 'dark' && next !== 'light') return;
+        CBT.theme.set(next);
+        toast(next === 'auto' ? 'Mode otomatis'
+          : next === 'dark' ? 'Mode malam' : 'Mode kertas');
+      });
+
+      CBT.theme.onChange(syncThemeGroup);
+      syncThemeGroup();
+    }
+
     /* --- Keyboard: "/" focuses search, Escape closes menu --- */
     CBT.dom.on(doc, 'keydown', function (e) {
       var tag = (e.target && e.target.tagName || '').toLowerCase();

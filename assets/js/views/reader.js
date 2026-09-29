@@ -255,15 +255,24 @@
       var forced = normalizeTheme((route.query && route.query.theme) || '');
       if (forced) CBT.theme.set(forced);
 
+      /* The header owns a second copy of this switch, so both sides just
+         re-read CBT.theme.mode() whenever it fires. */
+      var syncSwitch = function () {
+        var active = CBT.theme.mode();
+        CBT.dom.qsa('[data-theme]', root).forEach(function (b) {
+          var on = b.getAttribute('data-theme') === active;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-pressed', String(on));
+        });
+      };
+      var offTheme = CBT.theme.onChange(syncSwitch);
+      CBT.app.registerCleanup(offTheme);
+      syncSwitch();
+
       CBT.dom.delegate(root, 'click', '[data-theme]', function (e, btn) {
         var next = normalizeTheme(btn.getAttribute('data-theme'));
         if (!next) return;
         CBT.theme.set(next);
-        CBT.dom.qsa('[data-theme]', root).forEach(function (b) {
-          var on = b.getAttribute('data-theme') === next;
-          b.classList.toggle('is-active', on);
-          b.setAttribute('aria-pressed', String(on));
-        });
         if (global.gsap && global.gsap.fromTo) {
           global.gsap.fromTo(root, { opacity: 0.55 }, { opacity: 1, duration: 0.34, ease: 'power2.out' });
         }

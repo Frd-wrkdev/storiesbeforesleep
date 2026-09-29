@@ -264,6 +264,57 @@ body[data-view="loading"] .site-main { min-height: 60vh; }
   border-radius: var(--r-pill);
 }
 
+/* ---------- Header colour-mode switch ----------
+   Same three choices as the reader's switch, but swatch-only so it
+   costs ~90px instead of ~270px. The text labels appear once the
+   viewport is wide enough to spare them. */
+.theme-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  flex-shrink: 0;
+  border-radius: var(--r-pill);
+  background: var(--night-850);
+  border: 1px solid var(--night-700);
+}
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 7px;
+  border-radius: var(--r-pill);
+  color: var(--text-low);
+  cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease-out),
+              color var(--t-fast) var(--ease-out);
+}
+.theme-btn:hover { color: var(--text-hi); background: var(--night-750); }
+.theme-btn.is-active {
+  background: var(--gold-300);
+  color: var(--night-900);
+}
+.theme-group .swatch {
+  width: 10px; height: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+}
+.theme-group .fill-night { background: var(--night-900); }
+.theme-group .fill-paper { background: var(--cream-100); }
+.theme-group .fill-auto {
+  background: linear-gradient(135deg, var(--night-900) 0 50%, var(--cream-100) 50% 100%);
+}
+.tg-label {
+  display: none;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
 /* ---------- Menu toggle (mobile) ---------- */
 .menu-toggle {
   display: none;
@@ -467,4 +518,26 @@ body[data-view="loading"] .site-main { min-height: 60vh; }
   .sound { margin-left: auto; }
   .footer-inner { grid-template-columns: 1fr; gap: var(--s-6); padding-block: var(--s-8); }
   .footer-nav { flex-direction: row; flex-wrap: wrap; gap: var(--s-4); }
+}
+
+@media (min-width: 1200px) {
+  .tg-label { display: inline; }
+}
+
+/* The header now carries one control too many. Between 901-1080px the
+   nav and the search are both present and there is no slack left, and
+   on phones the slider plus the new switch exceed the viewport.
+   Tighten the gaps across the cramped range, and drop the volume
+   slider exactly where it cannot fit - the sound button still works. */
+@media (max-width: 1080px) {
+  .header-inner { gap: var(--s-4); }
+}
+
+@media (min-width: 901px) and (max-width: 1080px) {
+  .sound-volume { display: none; }
+}
+
+@media (max-width: 420px) {
+  .sound-volume { display: none; }
+  .theme-btn { padding: 0 6px; }
 }

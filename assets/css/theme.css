@@ -108,6 +108,21 @@
 :root[data-theme="light"] .sound-volume input[type="range"]::-moz-range-track { background: var(--cream-200); }
 :root[data-theme="light"] .sound-volume input[type="range"]:hover::-webkit-slider-runnable-track { background: var(--cream-300); }
 :root[data-theme="light"] .sound-volume input[type="range"]:hover::-moz-range-track { background: var(--cream-300); }
+
+/* Header colour-mode switch. The swatches stay literal - a dark circle
+   and a cream circle are the point - only the pill and the active
+   segment follow the palette. */
+:root[data-theme="light"] .theme-group {
+  background: var(--fill);
+  border-color: var(--edge);
+}
+:root[data-theme="light"] .theme-btn { color: var(--ink-500); }
+:root[data-theme="light"] .theme-btn:hover { color: var(--ink-900); background: var(--cream-100); }
+:root[data-theme="light"] .theme-btn.is-active {
+  background: var(--lilac-400);
+  color: #FFFFFF;
+}
+
 :root[data-theme="light"] .mobile-nav {
   background: rgba(247, 241, 230, 0.98);
   border-top-color: var(--cream-200);

@@ -58,6 +58,18 @@
     if (tc) tc.setAttribute('content', current === 'light' ? '#F7F1E6' : '#0B1026');
   }
 
+  /* Controls live in two places (the header and the reader switch), so
+     every change - manual or from the OS - is broadcast to let them
+     re-highlight themselves. */
+  var listeners = [];
+  function emit() {
+    var snapshot = listeners.slice();
+    for (var i = 0; i < snapshot.length; i++) {
+      try { snapshot[i]({ mode: mode, current: current }); }
+      catch (e) { /* one bad subscriber must not stop the rest */ }
+    }
+  }
+
   function apply() {
     var next = resolve(mode);
     if (next === current) { paint(); return false; }
@@ -74,8 +86,11 @@
   if (mq) {
     var onSchemeChange = function () {
       if (mode !== 'auto') return;
-      if (apply() && CBT.app && CBT.app.toast) {
-        CBT.app.toast(current === 'dark' ? 'Mode malam' : 'Mode kertas');
+      if (apply()) {
+        emit();
+        if (CBT.app && CBT.app.toast) {
+          CBT.app.toast(current === 'dark' ? 'Mode malam' : 'Mode kertas');
+        }
       }
     };
     if (mq.addEventListener) mq.addEventListener('change', onSchemeChange);
@@ -93,7 +108,18 @@
       if (m !== 'dark' && m !== 'light') m = 'auto';
       mode = m;
       writePref(m);
-      return apply();
+      var changed = apply();
+      emit();
+      return changed;
+    },
+    /** Fires with {mode, current} on every change. Returns an unsubscribe function. */
+    onChange: function (fn) {
+      if (typeof fn !== 'function') return function () {};
+      listeners.push(fn);
+      return function () {
+        var i = listeners.indexOf(fn);
+        if (i > -1) listeners.splice(i, 1);
+      };
     },
     refresh: apply
   };
