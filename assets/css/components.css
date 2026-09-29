@@ -54,7 +54,7 @@
   padding-bottom: 6px;
   font-size: var(--fs-md);
   font-weight: 700;
-  color: var(--gold-300);
+  color: var(--accent-text);
   border-bottom: 2px solid transparent;
   transition: border-color var(--t-fast) var(--ease-out), gap var(--t-fast) var(--ease-out);
 }

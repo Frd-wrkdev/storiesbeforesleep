@@ -5,15 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cerita Sebelum Tidur — Dongeng Hangat untuk Malam Hari</title>
 <meta name="description" content="Kumpulan dongeng pendek berbahasa Indonesia untuk dibacakan sebelum tidur. Cerita hangat, ilustrasi piksel, dan tema Mode Malam atau Mode Kertas.">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#0B1026">
 <meta property="og:title" content="Cerita Sebelum Tidur">
 <meta property="og:description" content="Dongeng hangat untuk menemani malam Anda. 12 cerita ditulis, 3 cerita video, siap dinikmati sambil memejamkan mata.">
 <meta property="og:type" content="website">
 
+<!-- Resolve the colour theme before first paint so the page never
+     flashes the wrong scheme. Mirrors assets/js/lib/theme.js - if you
+     change the mapping here, change it there too. -->
+<script>
+(function () {
+  var v = 'auto';
+  try { v = JSON.parse(localStorage.getItem('cbt:v1:prefs') || '{}').theme || 'auto'; }
+  catch (e) { v = 'auto'; }
+  if (v === 'night') v = 'dark';
+  if (v === 'paper') v = 'light';
+  if (v !== 'dark' && v !== 'light') {
+    v = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', v);
+})();
+</script>
+
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/theme.css">
 <link rel="stylesheet" href="assets/css/layout.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/home.css">
@@ -163,6 +181,7 @@
 
 <script src="assets/js/lib/dom.js"></script>
 <script src="assets/js/lib/store.js"></script>
+<script src="assets/js/lib/theme.js"></script>
 <script src="assets/js/lib/ambient.js"></script>
 <script src="assets/js/lib/router.js"></script>
 <script src="assets/js/lib/ui.js"></script>

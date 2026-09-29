@@ -99,7 +99,7 @@ body[data-view="loading"] .site-main { min-height: 60vh; }
 .brand-line2 {
   font-size: var(--fs-lg);
   font-weight: 600;
-  color: var(--gold-300);
+  color: var(--accent-text);
 }
 
 .main-nav {
@@ -363,7 +363,7 @@ body[data-view="loading"] .site-main { min-height: 60vh; }
   color: var(--text-mid);
   transition: color var(--t-fast) var(--ease-out);
 }
-.footer-nav a:hover { color: var(--gold-300); }
+.footer-nav a:hover { color: var(--accent-text); }
 
 .footer-meta { text-align: right; }
 .footer-meta p { font-size: var(--fs-md); color: var(--text-low); }

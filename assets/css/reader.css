@@ -1,104 +1,14 @@
 /* ==================================================================
    Cerita Sebelum Tidur - reader view
-   Reading page + Mode Malam / Mode Kertas themes
+   Reading page + Mode Malam / Mode Kertas controls
+   ------------------------------------------------------------------
+   The colour themes live in assets/css/theme.css and are driven by
+   <html data-theme>. Only reader-specific theme rules stay here.
    ================================================================== */
 
-/* ---------------------------------------------------------------
-   Theme tokens. Scoped to body so the header, footer and tab bar
-   follow along. Night is the default site palette; paper swaps the
-   semantic surface + text tokens to warm cream and ink.
-   --------------------------------------------------------------- */
-body[data-reader-theme="night"] {
-  --page:            var(--night-900);
-  --surface:         var(--night-800);
-  --surface-raised:  var(--night-750);
-  --hairline:        var(--night-700);
-  --text-hi:         #F4F1FF;
-  --text-mid:        #B9B6D6;
-  --text-low:        #8380A8;
-  --text-faint:      #5D5A83;
-}
-
-body[data-reader-theme="paper"] {
-  --page:            #F7F1E6;
-  --surface:         var(--cream-50);
-  --surface-raised:  #FFFFFF;
-  --hairline:        var(--cream-200);
-  --text-hi:         var(--ink-900);
-  --text-mid:        var(--ink-700);
-  --text-low:        var(--ink-500);
-  --text-faint:      var(--ink-300);
-
-  background-color: #F7F1E6;
-  background-image:
-    radial-gradient(ellipse 90% 50% at 50% -12%, rgba(185, 166, 242, 0.18), transparent 62%),
-    radial-gradient(ellipse 60% 40% at 100% 6%, rgba(246, 214, 138, 0.22), transparent 58%);
-  color: var(--ink-700);
-}
-
-/* Paper-mode chrome adjustments */
-body[data-reader-theme="paper"] .site-header {
-  background: rgba(247, 241, 230, 0.88);
-  border-bottom-color: var(--cream-200);
-}
-body[data-reader-theme="paper"] .brand-line1 { color: var(--ink-500); }
-body[data-reader-theme="paper"] .brand-mark {
-  background: linear-gradient(160deg, #FFFFFF, var(--cream-100));
-  border-color: var(--cream-200);
-}
-body[data-reader-theme="paper"] .main-nav a { color: var(--ink-700); }
-body[data-reader-theme="paper"] .main-nav a:hover { color: var(--ink-900); background: var(--cream-200); }
-body[data-reader-theme="paper"] .main-nav a.is-active { background: var(--lilac-300); color: var(--night-900); }
-body[data-reader-theme="paper"] .header-search input {
-  background: #FFFFFF;
-  border-color: var(--cream-200);
-  color: var(--ink-900);
-}
-body[data-reader-theme="paper"] .header-search input::placeholder { color: var(--ink-300); }
-body[data-reader-theme="paper"] .header-search .search-icon { color: var(--ink-300); }
-body[data-reader-theme="paper"] .menu-toggle {
-  background: #FFFFFF;
-  border-color: var(--cream-200);
-}
-body[data-reader-theme="paper"] .menu-toggle span { background: var(--ink-700); }
-body[data-reader-theme="paper"] .sound-toggle {
-  background: #FFFFFF;
-  border-color: var(--cream-200);
-  color: var(--ink-700);
-}
-body[data-reader-theme="paper"] .sound-toggle[aria-pressed="true"] {
-  color: var(--lilac-500);
-  border-color: var(--lilac-300);
-  background: var(--cream-100);
-}
-body[data-reader-theme="paper"] .sound-volume input[type="range"]::-webkit-slider-runnable-track { background: var(--cream-200); }
-body[data-reader-theme="paper"] .sound-volume input[type="range"]::-moz-range-track { background: var(--cream-200); }
-body[data-reader-theme="paper"] .sound-volume input[type="range"]:hover::-webkit-slider-runnable-track { background: var(--cream-300); }
-body[data-reader-theme="paper"] .sound-volume input[type="range"]:hover::-moz-range-track { background: var(--cream-300); }
-body[data-reader-theme="paper"] .mobile-nav {
-  background: rgba(247, 241, 230, 0.98);
-  border-top-color: var(--cream-200);
-}
-body[data-reader-theme="paper"] .mobile-nav a { color: var(--ink-700); }
-body[data-reader-theme="paper"] .mobile-nav a.is-active { color: var(--lilac-500); background: var(--cream-200); }
-body[data-reader-theme="paper"] .tabbar {
-  background: rgba(247, 241, 230, 0.96);
-  border-top-color: var(--cream-200);
-}
-body[data-reader-theme="paper"] .tabbar .tab { color: var(--ink-300); }
-body[data-reader-theme="paper"] .tabbar .tab.is-active { color: var(--lilac-500); }
-body[data-reader-theme="paper"] .site-footer {
-  border-top-color: var(--cream-200);
-  background: linear-gradient(180deg, rgba(247,241,230,0) 0%, rgba(234, 223, 203, 0.5) 100%);
-}
-body[data-reader-theme="paper"] .footer-mark {
-  background: #FFFFFF;
-  border-color: var(--cream-200);
-}
-body[data-reader-theme="paper"] :focus-visible { outline-color: var(--lilac-500); }
-body[data-reader-theme="paper"] .skip-link { background: var(--lilac-400); color: #FFFFFF; }
-body[data-reader-theme="paper"] ::selection { background: rgba(124, 103, 214, 0.24); color: var(--ink-900); }
-body[data-reader-theme="paper"] .section-eyebrow { color: var(--lilac-500); }
+/* Chrome-level light-mode rules (header, nav, search, menu, sound,
+   tab bar, footer) now live with the rest of the theme in
+   assets/css/theme.css. */
 
 /* ---------------------------------------------------------------
    Reading progress (fixed under the header)
@@ -120,7 +30,7 @@ body[data-reader-theme="paper"] .section-eyebrow { color: var(--lilac-500); }
   box-shadow: 0 0 12px rgba(246, 214, 138, 0.6);
   transition: width 90ms linear;
 }
-body[data-reader-theme="paper"] .read-progress span {
+:root[data-theme="light"] .read-progress span {
   background: linear-gradient(90deg, var(--lilac-500), var(--gold-500));
 }
 
@@ -184,7 +94,7 @@ body[data-reader-theme="paper"] .read-progress span {
   color: var(--night-900);
   box-shadow: var(--sh-hair);
 }
-body[data-reader-theme="paper"] .theme-switch button.is-active {
+:root[data-theme="light"] .theme-switch button.is-active {
   background: var(--lilac-400);
   color: #FFFFFF;
 }
@@ -195,6 +105,9 @@ body[data-reader-theme="paper"] .theme-switch button.is-active {
 }
 .theme-switch .swatch.fill-night { background: var(--night-900); }
 .theme-switch .swatch.fill-paper { background: var(--cream-100); }
+.theme-switch .swatch.fill-auto {
+  background: linear-gradient(135deg, var(--night-900) 0 50%, var(--cream-100) 50% 100%);
+}
 
 /* ---------------------------------------------------------------
    Reader header
@@ -210,7 +123,7 @@ body[data-reader-theme="paper"] .theme-switch button.is-active {
   color: var(--text-low);
 }
 .reader-crumbs a { color: var(--lilac-300); font-weight: 700; }
-body[data-reader-theme="paper"] .reader-crumbs a { color: var(--lilac-500); }
+:root[data-theme="light"] .reader-crumbs a { color: var(--lilac-500); }
 .reader-crumbs a:hover { text-decoration: underline; }
 
 .reader-title {
@@ -328,7 +241,7 @@ body[data-reader-theme="paper"] .reader-crumbs a { color: var(--lilac-500); }
   color: var(--text-mid);
   hyphens: auto;
 }
-body[data-reader-theme="paper"] .reader-body { color: #3B3352; }
+:root[data-theme="light"] .reader-body { color: #3B3352; }
 
 .reader-body > p { margin-top: 1.35em; }
 .reader-body > p:first-child { margin-top: 0; }
@@ -342,17 +255,17 @@ body[data-reader-theme="paper"] .reader-body { color: #3B3352; }
   margin: 0.06em 0.12em 0 0;
   color: var(--lilac-300);
 }
-body[data-reader-theme="paper"] .reader-body > p:first-child::first-letter {
+:root[data-theme="light"] .reader-body > p:first-child::first-letter {
   color: var(--lilac-500);
 }
 
 .reader-body em { font-style: italic; }
 .reader-body strong { color: var(--text-hi); font-weight: 700; }
-body[data-reader-theme="paper"] .reader-body strong { color: var(--ink-900); }
+:root[data-theme="light"] .reader-body strong { color: var(--ink-900); }
 
 /* Dialogue paragraphs get a subtle warm lift so speech reads as its own layer */
 .reader-body .dialogue { color: var(--text-hi); }
-body[data-reader-theme="paper"] .reader-body .dialogue { color: var(--ink-900); }
+:root[data-theme="light"] .reader-body .dialogue { color: var(--ink-900); }
 
 .reader-end {
   display: flex;

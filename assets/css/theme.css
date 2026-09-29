@@ -1,0 +1,221 @@
+/* ==================================================================
+   Cerita Sebelum Tidur - colour themes
+   ------------------------------------------------------------------
+   Two site-wide palettes selected by <html data-theme="dark|light">.
+   assets/js/lib/theme.js resolves the value: when the stored
+   preference is "auto" it follows prefers-color-scheme, so the whole
+   site flips with the device without a reload.
+
+   `:root` in base.css keeps the dark palette as the no-JS fallback,
+   so nothing here is required for the page to render.
+
+   Light rules are added per-selector rather than by remapping the
+   --night-* scale. That keeps the five places where night-900 is used
+   as *dark text on a gold/rose accent* (.btn-primary, .chip.is-active,
+   .nav-count, .toast, .main-nav a.is-active) dark in both modes.
+   ================================================================== */
+
+/* ---------------------------------------------------------------
+   Accent text. #F6D68A only reaches ~1.6:1 against cream, so light
+   mode swaps it for a deep amber that clears 4.5:1 (4.9:1 measured).
+   --------------------------------------------------------------- */
+:root { --accent-text: var(--gold-300); }
+
+/* ---------------- Semantic tokens ---------------- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:            var(--night-900);
+  --surface:         var(--night-800);
+  --surface-raised:  var(--night-750);
+  --hairline:        var(--night-700);
+  --text-hi:         #F4F1FF;
+  --text-mid:        #B9B6D6;
+  --text-low:        #8380A8;
+  --text-faint:      #5D5A83;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page:            #F7F1E6;
+  --surface:         var(--cream-50);
+  --surface-raised:  #FFFFFF;
+  --hairline:        var(--cream-200);
+  --text-hi:         var(--ink-900);
+  --text-mid:        var(--ink-700);
+  --text-low:        var(--ink-500);
+  --text-faint:      var(--ink-300);
+  --accent-text:     #9A5A00;
+
+  /* Fills and edges that mirror night-850 / 800 / 750 / 700 / 600 */
+  --fill:            #FFFFFF;
+  --fill-sunken:     var(--cream-100);
+  --edge:            var(--cream-200);
+  --edge-strong:     var(--cream-300);
+}
+
+:root[data-theme="light"] body {
+  background-color: var(--page);
+  background-image:
+    radial-gradient(ellipse 90% 50% at 50% -12%, rgba(185, 166, 242, 0.18), transparent 62%),
+    radial-gradient(ellipse 60% 40% at 100% 6%, rgba(246, 214, 138, 0.22), transparent 58%);
+  background-attachment: fixed;
+  color: var(--ink-700);
+}
+
+/* ==================================================================
+   Site chrome
+   ================================================================== */
+:root[data-theme="light"] .site-header {
+  background: rgba(247, 241, 230, 0.88);
+  border-bottom-color: var(--cream-200);
+}
+:root[data-theme="light"] .brand-line1 { color: var(--ink-500); }
+:root[data-theme="light"] .brand-mark {
+  background: linear-gradient(160deg, #FFFFFF, var(--cream-100));
+  border-color: var(--cream-200);
+}
+:root[data-theme="light"] .main-nav a { color: var(--ink-700); }
+:root[data-theme="light"] .main-nav a:hover { color: var(--ink-900); background: var(--cream-200); }
+:root[data-theme="light"] .main-nav a.is-active { background: var(--lilac-300); color: var(--night-900); }
+:root[data-theme="light"] .header-search input {
+  background: #FFFFFF;
+  border-color: var(--cream-200);
+  color: var(--ink-900);
+}
+:root[data-theme="light"] .header-search input::placeholder { color: var(--ink-300); }
+:root[data-theme="light"] .header-search input:hover { border-color: var(--cream-300); }
+:root[data-theme="light"] .header-search input:focus {
+  border-color: var(--lilac-400);
+  background: var(--cream-100);
+}
+:root[data-theme="light"] .header-search .search-icon { color: var(--ink-300); }
+:root[data-theme="light"] .menu-toggle {
+  background: #FFFFFF;
+  border-color: var(--cream-200);
+}
+:root[data-theme="light"] .menu-toggle span { background: var(--ink-700); }
+:root[data-theme="light"] .sound-toggle {
+  background: #FFFFFF;
+  border-color: var(--cream-200);
+  color: var(--ink-700);
+}
+:root[data-theme="light"] .sound-toggle[aria-pressed="true"] {
+  color: var(--lilac-500);
+  border-color: var(--lilac-300);
+  background: var(--cream-100);
+}
+:root[data-theme="light"] .sound-volume input[type="range"]::-webkit-slider-runnable-track { background: var(--cream-200); }
+:root[data-theme="light"] .sound-volume input[type="range"]::-moz-range-track { background: var(--cream-200); }
+:root[data-theme="light"] .sound-volume input[type="range"]:hover::-webkit-slider-runnable-track { background: var(--cream-300); }
+:root[data-theme="light"] .sound-volume input[type="range"]:hover::-moz-range-track { background: var(--cream-300); }
+:root[data-theme="light"] .mobile-nav {
+  background: rgba(247, 241, 230, 0.98);
+  border-top-color: var(--cream-200);
+}
+:root[data-theme="light"] .mobile-nav a { color: var(--ink-700); }
+:root[data-theme="light"] .mobile-nav a.is-active { color: var(--lilac-500); background: var(--cream-200); }
+:root[data-theme="light"] .tabbar {
+  background: rgba(247, 241, 230, 0.96);
+  border-top-color: var(--cream-200);
+}
+:root[data-theme="light"] .tabbar .tab { color: var(--ink-300); }
+:root[data-theme="light"] .tabbar .tab.is-active { color: var(--lilac-500); }
+:root[data-theme="light"] .site-footer {
+  border-top-color: var(--cream-200);
+  background: linear-gradient(180deg, rgba(247,241,230,0) 0%, rgba(234, 223, 203, 0.5) 100%);
+}
+:root[data-theme="light"] .footer-mark {
+  background: #FFFFFF;
+  border-color: var(--cream-200);
+}
+:root[data-theme="light"] :focus-visible { outline-color: var(--lilac-500); }
+:root[data-theme="light"] .skip-link { background: var(--lilac-400); color: #FFFFFF; }
+:root[data-theme="light"] ::selection { background: rgba(124, 103, 214, 0.24); color: var(--ink-900); }
+:root[data-theme="light"] .section-eyebrow { color: var(--lilac-500); }
+:root[data-theme="light"] hr { border-top-color: var(--cream-200); }
+
+/* ==================================================================
+   Content
+   ================================================================== */
+/* ---------------------------------------------------------------
+   State rules. A plain `:root[data-theme="light"] .x` sits at
+   (0,3,0), which outranks the base `.x:hover` / `.x.is-active` at
+   (0,2,0) - so every base state rule needs its own light counterpart
+   or the hover/active feedback silently disappears.
+   --------------------------------------------------------------- */
+:root[data-theme="light"] .btn-secondary {
+  background: var(--fill);
+  border-color: var(--edge-strong);
+  color: var(--text-hi);
+}
+:root[data-theme="light"] .btn-secondary:hover {
+  background: var(--fill-sunken);
+  border-color: var(--lilac-400);
+}
+
+:root[data-theme="light"] .btn-ghost { border-color: var(--edge); }
+:root[data-theme="light"] .btn-ghost:hover {
+  background: var(--fill-sunken);
+  border-color: var(--lilac-400);
+}
+
+:root[data-theme="light"] .icon-btn {
+  background: var(--fill);
+  border-color: var(--edge);
+}
+:root[data-theme="light"] .icon-btn:hover {
+  background: var(--fill-sunken);
+  color: var(--rose-400);
+  border-color: var(--rose-400);
+}
+
+:root[data-theme="light"] .chip {
+  background: var(--fill);
+  border-color: var(--edge);
+}
+:root[data-theme="light"] .chip:hover {
+  background: var(--fill-sunken);
+  border-color: var(--lilac-400);
+  color: var(--text-hi);
+}
+/* Must follow .chip:hover: both are (0,4,0) and the active pill wins. */
+:root[data-theme="light"] .chip.is-active {
+  background: var(--lilac-300);
+  border-color: var(--lilac-300);
+  color: var(--night-900);
+}
+
+:root[data-theme="light"] .empty { border-color: var(--edge-strong); }
+:root[data-theme="light"] .progress-track { background: var(--edge); }
+
+:root[data-theme="light"] .cat-card-icon,
+:root[data-theme="light"] .duo-card .duo-icon,
+:root[data-theme="light"] .continue-art {
+  background: var(--fill);
+  border-color: var(--edge);
+}
+:root[data-theme="light"] .continue-card {
+  background: linear-gradient(135deg, #FFFFFF, var(--cream-100));
+  border-color: var(--edge);
+}
+
+:root[data-theme="light"] .hero-eyebrow {
+  background: var(--fill);
+  border-color: var(--edge);
+  color: var(--lilac-500);
+}
+/* The hero is a night-sky illustration, not UI chrome - it stays dark
+   in both modes so the stars and sprites keep their contrast. Its
+   caption pill therefore has to keep light text. */
+:root[data-theme="light"] .hero-caption {
+  color: #B9B6D6;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+:root[data-theme="light"] .night-strip {
+  background:
+    radial-gradient(ellipse 60% 130% at 88% 50%, rgba(246, 214, 138, 0.4), transparent 60%),
+    linear-gradient(135deg, #FFFFFF, var(--cream-100));
+  border-color: var(--edge);
+}
+:root[data-theme="light"] .night-strip::after { opacity: 0.55; }

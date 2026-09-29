@@ -29,19 +29,33 @@
     return CBT.stories.minutes(s) + ' menit';
   }
 
-  function themeSwitch(theme) {
+  /* The palette is site-wide; this switch only writes the preference.
+     Values are the stored ones (auto | dark | light), so "Otomatis"
+     stays highlighted even when the device is currently showing the
+     opposite palette. */
+  function normalizeTheme(v) {
+    if (v === 'night') return 'dark';
+    if (v === 'paper') return 'light';
+    if (v === 'auto' || v === 'dark' || v === 'light') return v;
+    return null;
+  }
+
+  function themeSwitch(mode) {
+    function item(value, label, swatch) {
+      var on = mode === value;
+      return '<button type="button" data-theme="' + value + '"' +
+        ' class="' + (on ? 'is-active' : '') + '"' +
+        ' aria-pressed="' + on + '"' +
+        ' aria-label="' + label + '">' +
+        '<span class="swatch ' + swatch + '" aria-hidden="true"></span>' +
+        '<span class="sw-label">' + label + '</span>' +
+      '</button>';
+    }
     return '' +
-      '<div class="theme-switch" role="group" aria-label="Tema bacaan">' +
-        '<button type="button" data-theme="night" class="' + (theme === 'night' ? 'is-active' : '') + '"' +
-          ' aria-pressed="' + (theme === 'night') + '">' +
-          '<span class="swatch fill-night" aria-hidden="true"></span>' +
-          '<span class="sw-label">Mode Malam</span>' +
-        '</button>' +
-        '<button type="button" data-theme="paper" class="' + (theme === 'paper' ? 'is-active' : '') + '"' +
-          ' aria-pressed="' + (theme === 'paper') + '">' +
-          '<span class="swatch fill-paper" aria-hidden="true"></span>' +
-          '<span class="sw-label">Mode Kertas</span>' +
-        '</button>' +
+      '<div class="theme-switch" role="group" aria-label="Mode warna">' +
+        item('auto', 'Otomatis', 'fill-auto') +
+        item('dark', 'Mode Malam', 'fill-night') +
+        item('light', 'Mode Kertas', 'fill-paper') +
       '</div>';
   }
 
@@ -185,10 +199,8 @@
           }) + '</div></div>';
       }
 
-      var q0 = (route.query && route.query.theme) || '';
-      var theme = (q0 === 'paper' || q0 === 'night')
-        ? q0
-        : (CBT.store.prefs.get('theme') === 'paper' ? 'paper' : 'night');
+      var q0 = normalizeTheme((route.query && route.query.theme) || '');
+      var theme = q0 || (CBT.theme ? CBT.theme.mode() : 'auto');
       var favOn = CBT.store.favorites.has(story.id);
       var cat = CBT.categories.get(story.categories[0]);
       var isVideo = CBT.stories.isVideo(story);
@@ -235,22 +247,18 @@
       if (!story) return;
 
       var doc = global.document;
-      var bodyEl = doc.body;
 
       /* ---- Theme ----
-         `#/cerita/<id>?theme=paper` forces a theme and remembers it,
-         so a reading link can be shared in the reader's preferred mode. */
-      var q = (route.query && route.query.theme) || '';
-      var saved = (q === 'paper' || q === 'night')
-        ? q
-        : (CBT.store.prefs.get('theme') === 'paper' ? 'paper' : 'night');
-      if (q === 'paper' || q === 'night') CBT.store.prefs.set('theme', saved);
-      bodyEl.setAttribute('data-reader-theme', saved);
+         The palette is owned by assets/js/lib/theme.js. This only
+         applies a `?theme=` override carried by a shared link, then
+         lets the three-way switch write the preference. */
+      var forced = normalizeTheme((route.query && route.query.theme) || '');
+      if (forced) CBT.theme.set(forced);
 
       CBT.dom.delegate(root, 'click', '[data-theme]', function (e, btn) {
-        var next = btn.getAttribute('data-theme') === 'paper' ? 'paper' : 'night';
-        CBT.store.prefs.set('theme', next);
-        bodyEl.setAttribute('data-reader-theme', next);
+        var next = normalizeTheme(btn.getAttribute('data-theme'));
+        if (!next) return;
+        CBT.theme.set(next);
         CBT.dom.qsa('[data-theme]', root).forEach(function (b) {
           var on = b.getAttribute('data-theme') === next;
           b.classList.toggle('is-active', on);
@@ -283,7 +291,6 @@
         });
 
         if (global.gsap && CBT.app && CBT.app.stagger) CBT.app.stagger(root);
-        CBT.app.registerCleanup(function () { bodyEl.removeAttribute('data-reader-theme'); });
         return;
       }
 
@@ -329,7 +336,6 @@
       CBT.app.registerCleanup(function () {
         offScroll();
         offResize();
-        bodyEl.removeAttribute('data-reader-theme');
         CBT.store.progress.set(story.id, Math.max(lastSaved, 0));
       });
     }
