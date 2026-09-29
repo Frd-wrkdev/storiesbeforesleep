@@ -1,0 +1,153 @@
+/* ==================================================================
+   Cerita Sebelum Tidur - transitions
+   Route changes, staggered entrances, shared micro-interactions.
+   GSAP drives the staggered reveals (see app.js); these rules cover
+   the baseline so the page still feels alive without it.
+   ================================================================== */
+
+/* ---------- View lifecycle ---------- */
+.view {
+  animation: view-in var(--t-view) var(--ease-out) both;
+}
+@keyframes view-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.is-leaving .view {
+  animation: view-out var(--t-base) var(--ease-soft) both;
+}
+@keyframes view-out {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(-10px); }
+}
+
+/* GSAP sets the from-state inline when it runs, so nothing needs to be
+   hidden here - if scripts fail, every card is visible by default. */
+
+/* ---------- Hero copy reveal ---------- */
+.hero-copy > * {
+  animation: rise-in var(--t-slow) var(--ease-out) both;
+}
+.hero-copy > *:nth-child(1) { animation-delay: 40ms; }
+.hero-copy > *:nth-child(2) { animation-delay: 110ms; }
+.hero-copy > *:nth-child(3) { animation-delay: 180ms; }
+.hero-copy > *:nth-child(4) { animation-delay: 250ms; }
+.hero-copy > *:nth-child(5) { animation-delay: 320ms; }
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.hero-art {
+  animation: art-in 640ms var(--ease-soft) both 120ms;
+}
+@keyframes art-in {
+  from { opacity: 0; transform: scale(0.965) translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Card hover glow ---------- */
+.story-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px var(--acc, transparent);
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease-out);
+  pointer-events: none;
+}
+.story-card:hover::after,
+.story-card:focus-within::after { opacity: 0.55; }
+
+/* ---------- Heart pop ---------- */
+@keyframes heart-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.32); }
+  100% { transform: scale(1); }
+}
+.fav-btn.is-popping svg { animation: heart-pop 380ms var(--ease-spring); }
+
+/* ---------- Button ripple-free press ---------- */
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.btn { position: relative; overflow: hidden; }
+.btn-primary::before,
+.btn-secondary::before,
+.btn-cream::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -60%;
+  width: 45%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+  transform: skewX(-18deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.btn-primary:hover::before,
+.btn-secondary:hover::before,
+.btn-cream:hover::before {
+  animation: sheen 720ms var(--ease-out);
+}
+@keyframes sheen {
+  from { left: -60%; opacity: 1; }
+  to   { left: 120%; opacity: 0; }
+}
+
+/* ---------- Sprite tile slow drift ---------- */
+.story-card .sprite-tile svg {
+  transition: transform var(--t-slow) var(--ease-spring);
+}
+.story-card:hover .sprite-tile svg {
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* ---------- Focus flash for programmatic focus ---------- */
+.site-main.is-focused { outline: none; }
+
+/* ---------- Scroll cue ---------- */
+.scroll-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--s-8);
+  font-size: var(--fs-2xs);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.scroll-cue span {
+  display: block;
+  width: 1px; height: 34px;
+  background: linear-gradient(180deg, var(--gold-300), transparent);
+  animation: cue 1.9s var(--ease-soft) infinite;
+}
+@keyframes cue {
+  0%, 100% { transform: scaleY(0.35); transform-origin: top; opacity: 0.4; }
+  50%      { transform: scaleY(1);    transform-origin: top; opacity: 1; }
+}
+
+/* ---------- Reduced motion: kill the decorative motion only ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .view,
+  .hero-copy > *,
+  .hero-art { animation: none !important; opacity: 1 !important; transform: none !important; }
+
+  .hero-float,
+  .hero-art::before,
+  .scroll-cue span,
+  .boot-mark,
+  .hero-eyebrow .dot { animation: none !important; }
+
+  .btn-primary::before,
+  .btn-secondary::before,
+  .btn-cream::before { display: none; }
+}

@@ -1,0 +1,552 @@
+/* ==================================================================
+   Cerita Sebelum Tidur - reader view
+   Reading page + Mode Malam / Mode Kertas themes
+   ================================================================== */
+
+/* ---------------------------------------------------------------
+   Theme tokens. Scoped to body so the header, footer and tab bar
+   follow along. Night is the default site palette; paper swaps the
+   semantic surface + text tokens to warm cream and ink.
+   --------------------------------------------------------------- */
+body[data-reader-theme="night"] {
+  --page:            var(--night-900);
+  --surface:         var(--night-800);
+  --surface-raised:  var(--night-750);
+  --hairline:        var(--night-700);
+  --text-hi:         #F4F1FF;
+  --text-mid:        #B9B6D6;
+  --text-low:        #8380A8;
+  --text-faint:      #5D5A83;
+}
+
+body[data-reader-theme="paper"] {
+  --page:            #F7F1E6;
+  --surface:         var(--cream-50);
+  --surface-raised:  #FFFFFF;
+  --hairline:        var(--cream-200);
+  --text-hi:         var(--ink-900);
+  --text-mid:        var(--ink-700);
+  --text-low:        var(--ink-500);
+  --text-faint:      var(--ink-300);
+
+  background-color: #F7F1E6;
+  background-image:
+    radial-gradient(ellipse 90% 50% at 50% -12%, rgba(185, 166, 242, 0.18), transparent 62%),
+    radial-gradient(ellipse 60% 40% at 100% 6%, rgba(246, 214, 138, 0.22), transparent 58%);
+  color: var(--ink-700);
+}
+
+/* Paper-mode chrome adjustments */
+body[data-reader-theme="paper"] .site-header {
+  background: rgba(247, 241, 230, 0.88);
+  border-bottom-color: var(--cream-200);
+}
+body[data-reader-theme="paper"] .brand-line1 { color: var(--ink-500); }
+body[data-reader-theme="paper"] .brand-mark {
+  background: linear-gradient(160deg, #FFFFFF, var(--cream-100));
+  border-color: var(--cream-200);
+}
+body[data-reader-theme="paper"] .main-nav a { color: var(--ink-700); }
+body[data-reader-theme="paper"] .main-nav a:hover { color: var(--ink-900); background: var(--cream-200); }
+body[data-reader-theme="paper"] .main-nav a.is-active { background: var(--lilac-300); color: var(--night-900); }
+body[data-reader-theme="paper"] .header-search input {
+  background: #FFFFFF;
+  border-color: var(--cream-200);
+  color: var(--ink-900);
+}
+body[data-reader-theme="paper"] .header-search input::placeholder { color: var(--ink-300); }
+body[data-reader-theme="paper"] .header-search .search-icon { color: var(--ink-300); }
+body[data-reader-theme="paper"] .menu-toggle {
+  background: #FFFFFF;
+  border-color: var(--cream-200);
+}
+body[data-reader-theme="paper"] .menu-toggle span { background: var(--ink-700); }
+body[data-reader-theme="paper"] .mobile-nav {
+  background: rgba(247, 241, 230, 0.98);
+  border-top-color: var(--cream-200);
+}
+body[data-reader-theme="paper"] .mobile-nav a { color: var(--ink-700); }
+body[data-reader-theme="paper"] .mobile-nav a.is-active { color: var(--lilac-500); background: var(--cream-200); }
+body[data-reader-theme="paper"] .tabbar {
+  background: rgba(247, 241, 230, 0.96);
+  border-top-color: var(--cream-200);
+}
+body[data-reader-theme="paper"] .tabbar .tab { color: var(--ink-300); }
+body[data-reader-theme="paper"] .tabbar .tab.is-active { color: var(--lilac-500); }
+body[data-reader-theme="paper"] .site-footer {
+  border-top-color: var(--cream-200);
+  background: linear-gradient(180deg, rgba(247,241,230,0) 0%, rgba(234, 223, 203, 0.5) 100%);
+}
+body[data-reader-theme="paper"] .footer-mark {
+  background: #FFFFFF;
+  border-color: var(--cream-200);
+}
+body[data-reader-theme="paper"] :focus-visible { outline-color: var(--lilac-500); }
+body[data-reader-theme="paper"] .skip-link { background: var(--lilac-400); color: #FFFFFF; }
+body[data-reader-theme="paper"] ::selection { background: rgba(124, 103, 214, 0.24); color: var(--ink-900); }
+body[data-reader-theme="paper"] .section-eyebrow { color: var(--lilac-500); }
+
+/* ---------------------------------------------------------------
+   Reading progress (fixed under the header)
+   --------------------------------------------------------------- */
+.read-progress {
+  position: fixed;
+  top: var(--header-h);
+  left: 0; right: 0;
+  z-index: var(--z-sticky);
+  height: 3px;
+  background: transparent;
+  pointer-events: none;
+}
+.read-progress span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--lilac-300), var(--gold-300));
+  box-shadow: 0 0 12px rgba(246, 214, 138, 0.6);
+  transition: width 90ms linear;
+}
+body[data-reader-theme="paper"] .read-progress span {
+  background: linear-gradient(90deg, var(--lilac-500), var(--gold-500));
+}
+
+/* ---------------------------------------------------------------
+   Reader toolbar
+   --------------------------------------------------------------- */
+.reader-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding-top: var(--s-6);
+  padding-bottom: var(--s-4);
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-4) var(--s-2) var(--s-3);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--text-mid);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--t-fast) var(--ease-out);
+}
+.back-link:hover {
+  color: var(--text-hi);
+  border-color: var(--lilac-400);
+  transform: translateX(-3px);
+}
+.reader-bar-spacer { flex: 1; }
+
+/* Theme switch */
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+}
+.theme-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--text-low);
+  cursor: pointer;
+  transition: all var(--t-fast) var(--ease-out);
+}
+.theme-switch button:hover { color: var(--text-hi); }
+.theme-switch button.is-active {
+  background: var(--gold-300);
+  color: var(--night-900);
+  box-shadow: var(--sh-hair);
+}
+body[data-reader-theme="paper"] .theme-switch button.is-active {
+  background: var(--lilac-400);
+  color: #FFFFFF;
+}
+.theme-switch .swatch {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+}
+.theme-switch .swatch.fill-night { background: var(--night-900); }
+.theme-switch .swatch.fill-paper { background: var(--cream-100); }
+
+/* ---------------------------------------------------------------
+   Reader header
+   --------------------------------------------------------------- */
+.reader-head { padding-bottom: var(--s-6); }
+
+.reader-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-sm);
+  color: var(--text-low);
+}
+.reader-crumbs a { color: var(--lilac-300); font-weight: 700; }
+body[data-reader-theme="paper"] .reader-crumbs a { color: var(--lilac-500); }
+.reader-crumbs a:hover { text-decoration: underline; }
+
+.reader-title {
+  margin-top: var(--s-4);
+  font-size: clamp(2rem, 5vw, var(--fs-4xl));
+  line-height: 1.06;
+}
+
+.reader-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+  font-size: var(--fs-md);
+  color: var(--text-low);
+}
+.reader-meta .meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.reader-meta .meta-item svg { opacity: 0.7; }
+
+.reader-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-top: var(--s-5);
+}
+.reader-tags .tag {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  color: var(--text-mid);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: var(--fs-xs);
+  padding: 6px 13px;
+}
+.reader-tags .tag:hover {
+  border-color: var(--lilac-400);
+  color: var(--text-hi);
+}
+
+/* ---------------------------------------------------------------
+   Reader illustration banner
+   --------------------------------------------------------------- */
+.reader-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-top: var(--s-8);
+  padding: var(--s-12) var(--s-6);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 90% at 50% 118%, var(--acc-soft) 0%, transparent 64%),
+    linear-gradient(160deg, var(--acc-soft) 0%, var(--surface) 76%);
+  border: 1px solid var(--hairline);
+}
+.reader-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 14% 26%, rgba(36,30,58,.16) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 86% 22%, rgba(36,30,58,.14) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 70% 74%, rgba(36,30,58,.12) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 26% 78%, rgba(36,30,58,.1) 50%, transparent 51%);
+  pointer-events: none;
+}
+.reader-art svg {
+  position: relative;
+  width: clamp(96px, 22vw, 148px);
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 14px 22px rgba(36, 30, 58, 0.22));
+}
+.reader-art-caption {
+  position: absolute;
+  bottom: var(--s-4);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 14px;
+  border-radius: var(--r-pill);
+  background: rgba(253, 248, 240, 0.86);
+  color: var(--ink-500);
+  font-size: var(--fs-2xs);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------
+   Article body
+   --------------------------------------------------------------- */
+.reader-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-8);
+  margin-top: var(--s-8);
+}
+
+.reader-article {
+  max-width: var(--reader-w);
+  margin-inline: auto;
+  width: 100%;
+}
+
+.reader-body {
+  font-family: var(--font-read);
+  font-size: 1.1875rem;
+  line-height: 1.82;
+  color: var(--text-mid);
+  hyphens: auto;
+}
+body[data-reader-theme="paper"] .reader-body { color: #3B3352; }
+
+.reader-body > p { margin-top: 1.35em; }
+.reader-body > p:first-child { margin-top: 0; }
+
+.reader-body > p:first-child::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 3.4em;
+  line-height: 0.86;
+  font-weight: 600;
+  margin: 0.06em 0.12em 0 0;
+  color: var(--lilac-300);
+}
+body[data-reader-theme="paper"] .reader-body > p:first-child::first-letter {
+  color: var(--lilac-500);
+}
+
+.reader-body em { font-style: italic; }
+.reader-body strong { color: var(--text-hi); font-weight: 700; }
+body[data-reader-theme="paper"] .reader-body strong { color: var(--ink-900); }
+
+/* Dialogue paragraphs get a subtle warm lift so speech reads as its own layer */
+.reader-body .dialogue { color: var(--text-hi); }
+body[data-reader-theme="paper"] .reader-body .dialogue { color: var(--ink-900); }
+
+.reader-end {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-top: var(--s-10);
+  color: var(--text-faint);
+}
+.reader-end::before,
+.reader-end::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hairline), transparent);
+}
+.reader-end-mark {
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+.reader-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  justify-content: center;
+  margin-top: var(--s-8);
+}
+
+/* ---------------------------------------------------------------
+   Prev / next navigation
+   --------------------------------------------------------------- */
+.pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-4);
+  max-width: var(--reader-w);
+  margin: var(--s-12) auto 0;
+}
+.pager-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  min-width: 0;
+  transition: all var(--t-base) var(--ease-out);
+}
+.pager-item:hover { border-color: var(--lilac-400); transform: translateY(-3px); }
+.pager-item.next { text-align: right; align-items: flex-end; }
+.pager-dir {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-2xs);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.pager-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--text-hi);
+  line-height: 1.25;
+}
+.pager-item.is-empty { opacity: 0.38; pointer-events: none; }
+
+/* ---------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .reader-body { font-size: 1.0625rem; line-height: 1.78; }
+  .reader-bar { flex-wrap: wrap; gap: var(--s-3); padding-top: var(--s-5); }
+  .reader-bar-spacer { display: none; }
+  .back-link { order: 1; }
+  .theme-switch { order: 2; margin-left: auto; }
+  .reader-actions .fav-top { order: 3; }
+  .reader-art { padding: var(--s-9) var(--s-5); border-radius: var(--r-lg); }
+  .pager { grid-template-columns: 1fr; }
+  .pager-item.next { text-align: left; align-items: flex-start; }
+  .theme-switch button { padding: 7px 11px; }
+}
+
+@media (max-width: 420px) {
+  .theme-switch button .sw-label { display: none; }
+  .reader-body > p:first-child::first-letter { font-size: 3em; }
+}
+
+/* ---------------------------------------------------------------
+   Video stories
+   The player is the whole point of these pages, so it gets the
+   same visual weight the prose column gets on a written story.
+   --------------------------------------------------------------- */
+.reader-video { margin-top: var(--s-8); }
+
+.video-heading {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  color: var(--text-hi);
+  margin-bottom: var(--s-4);
+}
+
+.video-player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--night-950);
+  box-shadow: var(--sh-card);
+}
+
+.video-facade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: var(--night-950);
+  cursor: pointer;
+  display: block;
+}
+
+.video-thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  transition: opacity var(--t-base) var(--ease-out),
+              transform var(--t-slow) var(--ease-out);
+}
+.video-facade:hover .video-thumb,
+.video-facade:focus-visible .video-thumb { opacity: 1; transform: scale(1.03); }
+
+.video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(124, 103, 214, 0.94);
+  color: #FFFFFF;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 10px 26px rgba(4, 7, 20, 0.45);
+  transition: transform var(--t-base) var(--ease-spring),
+              background var(--t-base) var(--ease-out);
+}
+.video-play svg { width: 30px; height: 30px; margin-left: 4px; }
+.video-facade:hover .video-play,
+.video-facade:focus-visible .video-play {
+  transform: translate(-50%, -50%) scale(1.06);
+  background: var(--lilac-400);
+}
+
+.video-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 5px 13px;
+  border-radius: var(--r-pill);
+  background: rgba(7, 11, 28, 0.76);
+  color: rgba(244, 241, 255, 0.94);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  white-space: nowrap;
+  transition: opacity var(--t-base) var(--ease-out);
+}
+.video-facade:hover .video-hint { opacity: 0.75; }
+
+/* Replaces the facade the moment it is clicked. */
+.video-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-credit {
+  margin-top: var(--s-3);
+  font-size: var(--fs-sm);
+  color: var(--text-faint);
+}
+.video-credit span { color: var(--text-mid); font-weight: 700; }
+
+.video-lede {
+  margin-top: var(--s-6);
+  font-family: var(--font-read);
+  font-size: var(--fs-lg);
+  line-height: 1.75;
+  color: var(--text-mid);
+}
+
+@media (max-width: 560px) {
+  .video-heading { font-size: var(--fs-xl); }
+  .video-play { width: 60px; height: 60px; }
+  .video-play svg { width: 24px; height: 24px; }
+  .video-hint { font-size: var(--fs-xs); bottom: 10px; }
+  .video-lede { font-size: var(--fs-base); margin-top: var(--s-5); }
+}

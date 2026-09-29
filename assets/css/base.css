@@ -1,0 +1,335 @@
+/* ==================================================================
+   Cerita Sebelum Tidur - base
+   Reset, design tokens, typography
+   ================================================================== */
+
+/* ---------- Reset (gentle, modern) ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select { font: inherit; color: inherit; }
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 { overflow-wrap: break-word; }
+
+ul[class],
+ol[class] {
+  list-style: none;
+  padding: 0;
+}
+
+a { color: inherit; text-decoration: none; }
+
+table { border-collapse: collapse; }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--night-700);
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  /* --- Night (deep navy) --- */
+  --night-950: #070B1C;
+  --night-900: #0B1026;  /* page base */
+  --night-850: #0F1533;
+  --night-800: #141B3D;  /* elevated surface */
+  --night-750: #172048;
+  --night-700: #1B2450;  /* hairline / fill */
+  --night-600: #263161;  /* hover fill */
+  --night-500: #37447A;
+
+  /* --- Cream (cards, warm white) --- */
+  --cream-50:  #FDF8F0;
+  --cream-100: #F6EDE0;
+  --cream-200: #EADFCB;
+  --cream-300: #D9CBB4;
+
+  /* --- Ink (text on cream) --- */
+  --ink-900: #241E3A;
+  --ink-700: #4A4162;
+  --ink-500: #6B6186;
+  --ink-300: #9A90B2;
+
+  /* --- Accents --- */
+  --lilac-200: #E6DDFB;
+  --lilac-300: #B9A6F2;
+  --lilac-400: #9C86E8;
+  --lilac-500: #7C67D6;
+
+  --sky-200: #DCEBFC;
+  --sky-300: #8FB8F0;
+  --sky-400: #6FA3E8;
+
+  --gold-200: #FDEBC4;
+  --gold-300: #F6D68A;  /* stars + moon */
+  --gold-400: #EFC35C;
+  --gold-500: #E0A83A;
+
+  --rose-300: #F2A8B8;   /* hearts / favourite */
+  --rose-400: #E88CA1;
+
+  --mint-300: #9EE0C8;   /* success / progress */
+  --mint-400: #74CFB0;
+
+  /* --- Semantic text --- */
+  --text-hi:   #F4F1FF;
+  --text-mid:  #B9B6D6;
+  --text-low:  #8380A8;
+  --text-faint:#5D5A83;
+
+  /* --- Semantic surfaces --- */
+  --surface:        var(--night-800);
+  --surface-raised: var(--night-750);
+  --hairline:       var(--night-700);
+  --page:           var(--night-900);
+
+  --card-bg:        var(--cream-50);
+  --card-bg-alt:    var(--cream-100);
+  --card-text:      var(--ink-900);
+  --card-text-soft: var(--ink-500);
+
+  /* --- Type --- */
+  --font-display: 'Fredoka', 'Segoe UI', system-ui, sans-serif;
+  --font-ui: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-read: 'Literata', Georgia, 'Times New Roman', serif;
+
+  --fs-2xs: 0.6875rem;  /* 11 */
+  --fs-xs:  0.75rem;    /* 12 */
+  --fs-sm:  0.8125rem;  /* 13 */
+  --fs-md:  0.875rem;   /* 14 */
+  --fs-base:1rem;       /* 16 */
+  --fs-lg:  1.125rem;   /* 18 */
+  --fs-xl:  1.3125rem;  /* 21 */
+  --fs-2xl: 1.625rem;   /* 26 */
+  --fs-3xl: 2rem;       /* 32 */
+  --fs-4xl: 2.5rem;     /* 40 */
+  --fs-5xl: 3.25rem;    /* 52 */
+
+  /* --- Space (4px scale) --- */
+  --s-1: 0.25rem;  --s-2: 0.5rem;   --s-3: 0.75rem;
+  --s-4: 1rem;     --s-5: 1.25rem;  --s-6: 1.5rem;
+  --s-8: 2rem;     --s-10: 2.5rem;  --s-12: 3rem;
+  --s-16: 4rem;    --s-20: 5rem;    --s-24: 6rem;
+
+  /* --- Radius --- */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-2xl: 40px;
+  --r-pill: 999px;
+
+  /* --- Shadows --- */
+  --sh-hair: 0 1px 2px rgba(4, 7, 20, 0.32);
+  --sh-card:
+    0 1px 2px rgba(4, 7, 20, 0.28),
+    0 10px 24px -14px rgba(4, 7, 20, 0.6);
+  --sh-lift:
+    0 2px 4px rgba(4, 7, 20, 0.3),
+    0 24px 44px -20px rgba(4, 7, 20, 0.72);
+  --sh-pop:
+    0 4px 10px rgba(4, 7, 20, 0.3),
+    0 32px 64px -24px rgba(4, 7, 20, 0.8);
+  --sh-glow-gold: 0 0 0 1px rgba(246, 214, 138, 0.24),
+                  0 8px 28px -12px rgba(246, 214, 138, 0.45);
+  --sh-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* --- Motion --- */
+  --ease-out: cubic-bezier(0.22, 0.68, 0.35, 1);
+  --ease-soft: cubic-bezier(0.33, 0.02, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+  --t-fast: 140ms;
+  --t-base: 200ms;
+  --t-slow: 320ms;
+  --t-view: 420ms;
+
+  /* --- Layout --- */
+  --shell: 1200px;
+  --shell-narrow: 940px;
+  --header-h: 68px;
+  --tabbar-h: 64px;
+  --reader-w: 700px;
+
+  /* --- Layers --- */
+  --z-base: 1;
+  --z-sticky: 40;
+  --z-header: 50;
+  --z-tabbar: 55;
+  --z-popover: 80;
+  --z-overlay: 90;
+  --z-toast: 100;
+  --z-view: 200;
+}
+
+/* ---------- Base typography ---------- */
+body {
+  font-family: var(--font-ui);
+  font-size: var(--fs-base);
+  font-weight: 400;
+  color: var(--text-mid);
+  background-color: var(--page);
+  /* Very soft night wash - keeps large screens from feeling flat */
+  background-image:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(124, 103, 214, 0.16), transparent 65%),
+    radial-gradient(ellipse 60% 40% at 100% 8%, rgba(111, 163, 232, 0.1), transparent 60%),
+    radial-gradient(ellipse 70% 45% at 0% 45%, rgba(156, 134, 232, 0.07), transparent 62%);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.014em;
+  color: var(--text-hi);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-4xl); }
+h2 { font-size: var(--fs-3xl); }
+h3 { font-size: var(--fs-2xl); }
+h4 { font-size: var(--fs-xl); }
+h5 { font-size: var(--fs-lg); }
+h6 { font-size: var(--fs-base); }
+
+strong, b { font-weight: 700; color: var(--text-hi); }
+
+small { font-size: var(--fs-sm); }
+
+code, kbd, samp { font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; }
+
+::selection {
+  background: rgba(185, 166, 242, 0.34);
+  color: var(--text-hi);
+}
+
+/* ---------- Focus ---------- */
+:focus { outline: none; }
+
+:focus-visible {
+  outline: 2px solid var(--gold-300);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ---------- Scrollbar ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--night-600) transparent;
+}
+
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--night-600);
+  border-radius: var(--r-pill);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--night-500); background-clip: content-box; }
+
+/* ---------- Utilities ---------- */
+.container {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--s-6);
+}
+
+.container-narrow {
+  width: 100%;
+  max-width: var(--shell-narrow);
+  margin-inline: auto;
+  padding-inline: var(--s-6);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--s-3);
+  left: var(--s-3);
+  z-index: var(--z-toast);
+  transform: translateY(-160%);
+  transition: transform var(--t-base) var(--ease-out);
+  padding: var(--s-3) var(--s-5);
+  background: var(--gold-300);
+  color: var(--night-900);
+  font-weight: 700;
+  border-radius: var(--r-pill);
+  box-shadow: var(--sh-pop);
+}
+.skip-link:focus-visible { transform: translateY(0); }
+
+.stack > * + * { margin-top: var(--flow, var(--s-4)); }
+
+.text-grad {
+  background: linear-gradient(96deg, var(--cream-50) 8%, var(--gold-200) 52%, var(--lilac-300) 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Motion preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
