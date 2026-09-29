@@ -56,6 +56,16 @@
       <input id="search-input" type="search" placeholder="Cari cerita…" autocomplete="off" spellcheck="false">
     </form>
 
+    <div class="sound" id="sound">
+      <button class="icon-btn sound-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Putar musik tidur">
+        <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      </button>
+      <label class="sound-volume" for="sound-range">
+        <span class="sr-only">Volume musik tidur</span>
+        <input id="sound-range" type="range" min="0" max="100" step="1" value="35">
+      </label>
+    </div>
+
     <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Buka menu">
       <span></span><span></span><span></span>
     </button>
@@ -153,6 +163,7 @@
 
 <script src="assets/js/lib/dom.js"></script>
 <script src="assets/js/lib/store.js"></script>
+<script src="assets/js/lib/ambient.js"></script>
 <script src="assets/js/lib/router.js"></script>
 <script src="assets/js/lib/ui.js"></script>
 

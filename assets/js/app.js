@@ -278,6 +278,45 @@
       });
     }
 
+    /* --- Ambient sleep sound --- */
+    var soundWrap = doc.getElementById('sound');
+    var soundToggle = doc.getElementById('sound-toggle');
+    var soundRange = doc.getElementById('sound-range');
+
+    if (soundWrap && soundToggle && CBT.ambient) {
+      if (!CBT.ambient.supported()) {
+        soundWrap.hidden = true;
+      } else {
+        var savedVol = CBT.store.prefs.get('volume');
+        var vol = typeof savedVol === 'number' ? savedVol : 0.35;
+        CBT.ambient.setVolume(vol);
+        if (soundRange) soundRange.value = String(Math.round(vol * 100));
+
+        var syncSound = function () {
+          var on = CBT.ambient.isOn();
+          soundToggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+          soundToggle.setAttribute('aria-label', on ? 'Hentikan musik tidur' : 'Putar musik tidur');
+          doc.body.classList.toggle('sound-on', on);
+        };
+
+        CBT.dom.on(soundToggle, 'click', function () {
+          if (CBT.ambient.toggle()) toast('Musik tidur menyala');
+          syncSound();
+        });
+
+        if (soundRange) {
+          CBT.dom.on(soundRange, 'input', function () {
+            CBT.ambient.setVolume(Number(soundRange.value) / 100);
+          });
+          CBT.dom.on(soundRange, 'change', function () {
+            CBT.store.prefs.set('volume', Number(soundRange.value) / 100);
+          });
+        }
+
+        syncSound();
+      }
+    }
+
     /* --- Keyboard: "/" focuses search, Escape closes menu --- */
     CBT.dom.on(doc, 'keydown', function (e) {
       var tag = (e.target && e.target.tagName || '').toLowerCase();
